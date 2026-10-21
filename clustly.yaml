@@ -3,7 +3,7 @@
 # Deterministic Solidity / EVM static security scanner.
 # No model credential: the rules run in the sandbox, so a finding is a pattern
 # that matched the source and never a sentence the model invented.
-name: vectorforge-solscan
+name: vectorforge-solscan-v2
 framework: node
 entry: handler.mjs
 env: []
