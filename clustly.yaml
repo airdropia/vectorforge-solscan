@@ -23,6 +23,11 @@ exclude:
   - "*.pem"
   - "*.key"
   - ".DS_Store"
+  # The agent has no dependencies, so the bundle ships no node workspace and
+  # the sandbox has nothing to install. Both files are kept in the repository
+  # for the npm based local workflow, they are just not part of the bundle.
+  - "package.json"
+  - "package-lock.json"
 
 inputs:
   - label: Contract source
