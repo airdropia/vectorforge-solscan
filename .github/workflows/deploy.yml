@@ -1,0 +1,30 @@
+name: deploy agent
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.0"
+      - name: Install the Clustly CLI
+        run: bun add @clustly/agent
+      - name: Sign in with the builder key
+        env:
+          CLUSTLY_BUILDER_KEY: ${{ secrets.CLUSTLY_BUILDER_KEY }}
+        run: printf '%s' "$CLUSTLY_BUILDER_KEY" | bun node_modules/@clustly/agent/dist/cli.js login --with-token
+      - name: Deploy the agent
+        run: bun node_modules/@clustly/agent/dist/cli.js deploy . --ci || true
+      - name: Publish the listing when a release is live
+        run: bun node_modules/@clustly/agent/dist/cli.js publish . --ci || true
+      - name: Report the state
+        run: bun node_modules/@clustly/agent/dist/cli.js agents --json || true
