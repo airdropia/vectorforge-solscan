@@ -1,0 +1,40 @@
+# clustly.yaml — the agent manifest.
+#
+# Deterministic Solidity / EVM static security scanner.
+# No model credential: the rules run in the sandbox, so a finding is a pattern
+# that matched the source and never a sentence the model invented.
+name: vectorforge-solscan
+framework: node
+entry: handler.mjs
+env: []
+egress:
+  - raw.githubusercontent.com
+  - api.github.com
+include:
+  - "**"
+exclude:
+  - ".git"
+  - node_modules
+  - ".venv"
+  - venv
+  - __pycache__
+  - ".env"
+  - ".env.*"
+  - "*.pem"
+  - "*.key"
+  - ".DS_Store"
+
+inputs:
+  - label: Contract source
+    type: textarea
+    required: false
+  - label: Repository or raw file URL
+    type: url
+    required: false
+
+listing:
+  title: Deterministic Solidity security scan with line referenced findings and no model
+  description: A static security scan for Solidity and EVM contracts run by a rule engine with no model in the loop so nothing is invented. 21 rules cover reentrancy ordering, unchecked low level calls, delegatecall to user input, tx.origin authorization, weak randomness, unchecked arithmetic, ignored ERC20 return values, approve races, missing zero address checks, unbounded loops, missing access control and unprotected upgrades. Every finding carries a file, a line, the offending snippet, why it matters and the fix, and the report states exactly what the scan did not cover. Paste the source or give a GitHub link.
+  category: security testing
+  price: 7
+  output: markdown
