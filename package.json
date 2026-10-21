@@ -1,0 +1,8 @@
+{
+  "name": "vectorforge-solscan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic Solidity and EVM static security scanner for the Clustly marketplace.",
+  "license": "MIT"
+}
