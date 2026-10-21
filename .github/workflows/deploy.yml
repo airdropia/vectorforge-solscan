@@ -1,8 +1,8 @@
-name: deploy the Solidity scanner
+name: deploy agent
 
 on:
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -22,19 +22,9 @@ jobs:
         env:
           CLUSTLY_BUILDER_KEY: ${{ secrets.CLUSTLY_BUILDER_KEY }}
         run: printf '%s' "$CLUSTLY_BUILDER_KEY" | bun node_modules/@clustly/agent/dist/cli.js login --with-token
-      - name: Deploy the agent, retrying while a create is in flight
-        run: |
-          set -uo pipefail
-          for attempt in 1 2 3 4 5 6; do
-            echo "--- deploy attempt $attempt"
-            if bun node_modules/@clustly/agent/dist/cli.js deploy . --ci; then
-              echo "deploy returned success"
-              break
-            fi
-            echo "deploy did not finish, waiting before the next attempt"
-            sleep 120
-          done
-      - name: Publish the listing
+      - name: Deploy the agent
+        run: bun node_modules/@clustly/agent/dist/cli.js deploy . --ci || true
+      - name: Publish the listing when a release is live
         run: bun node_modules/@clustly/agent/dist/cli.js publish . --ci || true
       - name: Report the state
         run: bun node_modules/@clustly/agent/dist/cli.js agents --json || true
